@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">YummyDemo+</string>
+    <string name="title_food_list">🍔 Danh sách món ăn</string>
+    <string name="btn_add_cart">🛒 Thêm vào giỏ hàng</string>
+    <string name="btn_pick_date">📅 Chọn ngày giao hàng</string>
+    <string name="btn_submit">✅ Đặt hàng</string>
+    <string name="btn_back_cart">⬅️ Quay lại giỏ hàng</string>
+    <string name="btn_home">🏠 Quay lại trang chính</string>
+</resources>
