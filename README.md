@@ -549,4 +549,369 @@ honesty_protocol:
 
 ---
 
-<!-- PHẦN 2: Section 6, 7, 8 tiếp theo bên dưới -->
+## 6. IDE INTEGRATION STRATEGY
+
+### 6.1. Antigravity (Google) Integration
+
+```yaml
+antigravity_setup:
+  config_files:
+    - path: "GEMINI.md"
+      purpose: "Core constitution, identity, language protocol"
+    - path: ".agent/rules/"
+      purpose: "Agent-specific rule files"
+      files:
+        - "security.md → Security Agent rules"
+        - "frontend.md → Frontend coding rules"
+        - "backend.md → Backend coding rules"
+        - "debug.md → Debug workflow rules"
+    - path: ".agent/workflows/"
+      purpose: "Automated workflow triggers"
+      files:
+        - "/plan → Planning workflow"
+        - "/create → Feature creation workflow"
+        - "/debug → Debug workflow"
+        - "/test → Test writing workflow"
+        - "/deploy → Deployment workflow"
+```
+
+### 6.2. Cursor Integration
+
+```yaml
+cursor_setup:
+  config_file: ".cursorrules"
+  structure: "Toàn bộ rules gộp vào 1 file .cursorrules, chia sections bằng headers"
+  sections:
+    - "## ARCHITECT RULES"
+    - "## CODING STANDARDS"
+    - "## REVIEW CHECKLIST"
+    - "## TESTING RULES"
+    - "## SECURITY RULES"
+    - "## ANTI-HALLUCINATION"
+```
+
+### 6.3. Cross-IDE Compatibility
+
+| Feature | Antigravity | Cursor | Claude CLI | Copilot |
+|---------|-------------|--------|------------|---------|
+| Rule File | GEMINI.md + .agent/ | .cursorrules | CLAUDE.md | .github/copilot* |
+| Multi-file Rules | ✅ | ❌ (1 file) | ✅ | ✅ |
+| Workflow Triggers | ✅ Workflows | ❌ | ✅ Commands | ❌ |
+| Skill System | ✅ Skills | ❌ | ❌ | ❌ |
+| Agent Roles | ✅ Rules files | Partial | ✅ | ❌ |
+
+---
+
+## 7. ENTERPRISE ENGINEERING PLAYBOOK
+
+> Phần này tích hợp toàn bộ kiến thức chuyên sâu — đóng vai trò làm **Foundation Knowledge** cho tất cả AI Agents.
+
+### 7.1. Clean Code & Design Principles
+
+```yaml
+foundations:
+  architecture:
+    - "SOLID Principles — nền tảng bắt buộc"
+    - "Layered Architecture: Controller → Service → Domain → Repository"
+    - "DDD — Business logic tách biệt trong Domain layer"
+    - "Dependency Injection — không new trực tiếp"
+    - "API Contract-First — viết OpenAPI trước khi code"
+
+  clean_code:
+    - "DRY, KISS, Guard Clauses"
+    - "Hàm ≤ 20 dòng, ≤ 3 params"
+    - "Naming: hàm = động từ, class = danh từ"
+    - "Comment WHY not WHAT"
+
+  concurrency_control:
+    optimistic_locking: "Cột version trong DB — cho case ít đụng độ"
+    pessimistic_locking: "SELECT ... FOR UPDATE — cho giao dịch tài chính"
+    idempotency: "Idempotency-Key header cho POST/PUT/DELETE quan trọng"
+
+  graceful_shutdown:
+    - "Lắng nghe signal SIGINT/SIGTERM từ OS/Kubernetes"
+    - "Dừng nhận request mới, xử lý nốt request đang chạy"
+    - "Đóng an toàn Database Connection Pool trước khi exit"
+```
+
+### 7.2. System Architecture
+
+```yaml
+system_architecture:
+  event_driven:
+    - "Message Brokers: Kafka/RabbitMQ/NATS cho async communication"
+    - "CQRS: Tách model Read/Write cho hệ thống lớn"
+    - "Event Sourcing: Lưu lịch sử state dưới dạng events bất biến"
+    - "Outbox Pattern: Đảm bảo consistency giữa DB write và event publish"
+    - "Dead Letter Queue (DLQ): Xử lý message thất bại"
+    - "Consumer Idempotent: Có thể chạy lại nhiều lần không sai lệch data"
+
+  bff_api:
+    - "BFF: Lớp riêng cho Web/Mobile client — không dùng chung 1 Gateway"
+    - "GraphQL Aggregation: Gộp data từ nhiều services, tránh over/under-fetching"
+
+  caching:
+    tier_1: "CDN cho static assets (images, CSS, JS)"
+    tier_2: "Redis/Memcached cho hot data — thiết lập TTL hợp lý"
+    tier_3: "In-Memory cache cho config/metadata ít thay đổi"
+    invalidation: "Cache-Aside / Write-Through / Write-Behind tùy use case"
+    stampede_prevention: "Mutex lock / Redis setnx chống Cache Stampede"
+```
+
+### 7.3. Database & Data Architecture
+
+```yaml
+database:
+  transactions:
+    - "Critical operations phải trong transaction"
+    - "Saga Pattern (Orchestration/Choreography) cho cross-service updates"
+    - "Outbox Pattern cho event publishing — tránh mất sự kiện khi crash"
+
+  scalability:
+    - "Read/Write Separation: Master (Write) + Replica (Read)"
+    - "Sharding & Partitioning cho tables lớn"
+    - "Database per Service — không share DB chéo"
+
+  query_rules:
+    - "KHÔNG query trong vòng lặp (N+1)"
+    - "Query > 100ms → bắt buộc Indexing"
+    - "Luôn dùng Parameterized Queries — chống SQLi"
+    - "Data Retention Policy: Xóa/archive logs/history định kỳ"
+```
+
+### 7.4. Microservices & API Design
+
+```yaml
+microservices:
+  gateway:
+    - "API Gateway: Routing, Rate Limiting, Auth, Transformation"
+    - "Service Discovery: K8s DNS hoặc Consul — không hardcode URL"
+    - "Centralized Config: Vault / Consul KV"
+    - "Service Mesh (Istio/Linkerd) cho > 20 services"
+
+  api_standards:
+    - "Versioning: /v1/, /v2/"
+    - "Idempotency: Idempotency Key cho payments/orders"
+    - "Pagination: Cursor-based hoặc Offset-based"
+    - "Response < 200ms, Payload < 1MB"
+    - "Error Handling: RFC 7807 (errorCode, message, details, timestamp)"
+    - "Deprecation Policy: 2 release cycles notice + Deprecation/Sunset headers"
+```
+
+### 7.5. DevOps & Infrastructure
+
+```yaml
+devops:
+  docker:
+    - "Multi-stage builds: Builder stage + Runtime stage (alpine/distroless)"
+    - "Dockerfile + .dockerignore bắt buộc"
+    - ".env trong .dockerignore và .gitignore"
+    - "Image scanning (Trivy/Snyk) — block Critical vulnerabilities"
+    - "Không mang mã nguồn gốc hay package manager vào runtime image"
+
+  cicd:
+    - "Pipeline: Build → Test → Security Scan → Deploy"
+    - "Immutable tags (v1.2.3-sha256abc) — không dùng tag latest"
+    - "Conventional Commits (feat:, fix:, refactor:)"
+    - "IaC: Terraform/Pulumi — no ClickOps"
+    - "Progressive Delivery: Canary / Blue-Green / Feature Flags"
+
+  kubernetes:
+    - "Resource Limits (CPU/Memory) bắt buộc — tránh OOM"
+    - "Health Checks: Liveness + Readiness Probes"
+    - "HPA/KEDA Auto Scaling theo traffic/events"
+    - "Pod Disruption Budget — đảm bảo availability khi maintenance"
+    - "Network Policy (Least Privilege) — kiểm soát traffic giữa pods"
+
+  developer_experience:
+    - "docker-compose.yml cho local environment"
+    - "Makefile/Taskfile cho common commands"
+    - "Pre-commit hooks (Husky/lint-staged)"
+```
+
+### 7.6. Security & Resiliency
+
+```yaml
+security:
+  enterprise:
+    - "OWASP Top 10: SQLi, XSS, CSRF"
+    - "OAuth2/JWT (RS256) + RBAC/ABAC"
+    - "Access Token ngắn hạn, Refresh Token trong HTTP-Only Secure Cookie"
+    - "Snyk/Trivy scanning trong CI"
+    - "Vault/AWS Secrets Manager — KHÔNG dùng .env trên Production"
+    - "SBOM — Supply Chain Security cho third-party dependencies"
+
+  zero_trust:
+    - "mTLS cho internal communication (Istio/Linkerd)"
+    - "Không log PII (password, credit card, email, SĐT)"
+    - "Data-at-rest Encryption cho dữ liệu nhạy cảm"
+    - "Data Masking cho môi trường Non-Production"
+    - "GDPR compliance: Right to be Forgotten, Data Portability, Consent"
+
+  encryption:
+    passwords: "Argon2 hoặc Bcrypt kèm Salt động — KHÔNG dùng MD5/SHA"
+    transit: "TLS 1.3 + HSTS — Webhook/S2S dùng HMAC-SHA256 hoặc mTLS"
+
+  resiliency:
+    - "Circuit Breaker — ngắt mạch khi 3rd party lỗi"
+    - "Retry + Exponential Backoff + Jitter — chống thundering herd"
+    - "Rate Limiting (Token Bucket / Sliding Window)"
+    - "Graceful Degradation — tính năng lõi vẫn chạy khi service phụ sập"
+    - "Bulkhead Pattern — cách ly Thread/Connection Pool giữa các chức năng"
+    - "Timeout bắt buộc cho mọi external call — không treo vô thời hạn"
+```
+
+### 7.7. Observability & SRE
+
+```yaml
+observability:
+  three_pillars:
+    logs: "ELK/Loki — Structured JSON (timestamp, level, service_name, trace_id)"
+    metrics: "Prometheus + Grafana — RED (Rate, Error, Duration) + USE"
+    traces: "OpenTelemetry + Jaeger/Tempo — Trace ID propagation xuyên suốt"
+
+  sre:
+    - "SLA/SLO/SLI definitions rõ ràng"
+    - "Error Budget — stop features nếu budget vượt ngưỡng"
+    - "Chaos Engineering (Chaos Monkey, LitmusChaos) trên Staging"
+    - "Incident Management: P1/P2/P3 → Post-mortem blameless trong 48h"
+    - "Runbook: deploy, rollback, xử lý lỗi thường gặp cho mọi service"
+
+  finops:
+    - "Rightsizing resources theo mức sử dụng thực tế"
+    - "Spot Instances cho batch jobs, CI runners, dev environments"
+    - "Scale-to-Zero ngoài giờ cho Dev/Staging"
+    - "Cost Tagging (team, project, environment) cho mọi tài nguyên cloud"
+```
+
+### 7.8. Frontend Architecture
+
+```yaml
+frontend:
+  components:
+    - "Smart/Dumb Components separation"
+    - "Atomic Design: Atoms → Molecules → Organisms → Pages"
+    - "Micro-Frontends (Module Federation/Single-SPA) cho > 3 teams"
+
+  state:
+    - "Không lạm dụng Global State — chỉ User Session, Theme"
+    - "Immutability — không mutate state trực tiếp"
+    - "Server State (TanStack Query/SWR) vs Client State (Zustand/Jotai)"
+
+  performance:
+    - "Code Splitting + Lazy Loading"
+    - "Core Web Vitals: LCP, INP, CLS"
+    - "CDN cho static assets"
+    - "Bundle Analysis trong CI — alert khi size vượt ngưỡng"
+
+  ux:
+    - "Error Boundaries — không sập trắng trang"
+    - "Skeleton Loading / Spinner"
+    - "Optimistic UI Updates — cập nhật UI trước, đồng bộ server sau"
+    - "Accessibility: alt, aria-label, keyboard navigation"
+```
+
+### 7.9. Mobile Architecture
+
+```yaml
+mobile:
+  offline_first:
+    - "Local Caching: SQLite/MMKV/Realm"
+    - "Background Syncing khi có mạng trở lại"
+    - "Conflict Resolution: Last Write Wins / Merge / Manual Resolve"
+
+  performance:
+    - "KHÔNG block UI Thread — xử lý nặng ở background"
+    - "FlatList/RecyclerView cho lists dài — recycling cells"
+    - "Cleanup listeners/timers/subscriptions on unmount"
+    - "WebP/AVIF images, resize đúng kích thước, progressive loading"
+
+  lifecycle:
+    - "Handle Foreground/Background/Killed states"
+    - "Giải phóng camera/GPS/audio khi Background"
+    - "Deep Linking & Universal Links"
+
+  security:
+    - "Keychain (iOS) / Keystore (Android) cho tokens — KHÔNG AsyncStorage"
+    - "SSL Pinning chống MITM"
+    - "Obfuscation/ProGuard cho production"
+
+  ops:
+    - "OTA Updates (CodePush/EAS) — hotfix không cần App Store review"
+    - "Crash Reporting (Sentry/Crashlytics) — crash-free ≥ 99.5%"
+    - "App Size Optimization (App Bundle/App Thinning)"
+```
+
+---
+
+## 8. SELF-AUDIT CHECKLIST
+
+> **Quy tắc vàng:** Mỗi AI Agent PHẢI chạy ngầm checklist này TRƯỚC khi render response.
+
+### 8.1. Pre-Output Checklist (Bắt buộc)
+
+```yaml
+checklist:
+  # Context & Anti-Hallucination
+  - "[ ] Đã đọc kỹ convention của các file xung quanh trước khi sinh code?"
+  - "[ ] Đã verify codebase thực tế trước khi reference?"
+  - "[ ] Không bịa API/function/table không tồn tại?"
+  - "[ ] Có đủ confidence để thực thi? Nếu không → HỎI?"
+
+  # Code Quality
+  - "[ ] Code dễ đọc, tuân thủ SOLID/DRY/KISS?"
+  - "[ ] Functions ≤ 20 dòng, ≤ 3 params, nesting ≤ 3?"
+  - "[ ] Code trả về đầy đủ 100%? Không dùng '// ... existing code ...'?"
+
+  # Architecture
+  - "[ ] Tuân thủ module boundaries? Không circular dependency?"
+  - "[ ] Đúng layer (Controller → Service → Domain → Repository)?"
+  - "[ ] Không phá DB, phá API contract?"
+
+  # Backend
+  - "[ ] Transaction cho critical operations? Không N+1?"
+  - "[ ] Concurrency control (Idempotency-Key)? Không Race Condition?"
+  - "[ ] Error handling đầy đủ? Log kèm trace_id?"
+
+  # Frontend
+  - "[ ] Smart/Dumb component separation? Error Boundaries?"
+  - "[ ] Loading/Error states xử lý? Accessibility?"
+
+  # Mobile
+  - "[ ] Không block Main Thread? Cleanup listeners on unmount?"
+  - "[ ] Token lưu Keychain/Keystore?"
+
+  # Security
+  - "[ ] Không hardcode secrets? Input validation đầy đủ?"
+  - "[ ] Không lỗ hổng OWASP? PII được bảo vệ?"
+  - "[ ] Mật khẩu đã băm chuẩn?"
+
+  # DevOps
+  - "[ ] Dockerfile Multi-stage? .env trong .gitignore?"
+  - "[ ] Graceful Shutdown đầy đủ?"
+
+  # Resiliency
+  - "[ ] Timeout, Circuit Breaker, Retry cho external calls?"
+```
+
+---
+
+## 📌 TÓM TẮT
+
+| Thành phần | Mô tả |
+|-----------|-------|
+| **8 AI Agents** | Architect, Coding, Reviewer, Tester, Refactorer, Documenter, Security, Orchestrator |
+| **7-Phase Pipeline** | Analysis → Architecture → Implementation → Review → Testing → Refactoring → Documentation |
+| **Safety Gates** | Code Review Gate, Security Gate, Test Gate — phải pass hết mới deploy |
+| **Anti-Hallucination** | 7 tầng phòng ngừa + Socratic Gate + Honesty Protocol |
+| **IDE Support** | Antigravity, Cursor, Claude CLI, Copilot |
+| **Enterprise Standards** | SOLID, DDD, Event-Driven, CQRS, Zero Trust, SRE, FinOps |
+
+---
+
+> **⚠️ NGUYÊN TẮC TỐI THƯỢNG:** AI Agent là **công cụ hỗ trợ engineer**, không phải thay thế engineer. Mọi quyết định kiến trúc quan trọng và thay đổi production critical PHẢI có sự phê duyệt của con người.
+
+---
+
+*Được tạo bởi Antigravity — AI Coding Team Architecture v4.0 ULTIMATE*
+*© 2026 — Enterprise Engineering Standards*
